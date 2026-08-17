@@ -76,10 +76,6 @@ services:
     container_name: markvault-clipper
     environment:
       - MARKVAULT_TOKEN=use-a-long-random-token
-      - MARKVAULT_VAULTS_ROOT=/vaults
-      - MARKVAULT_DEFAULT_VAULT=MyVault
-      - MARKVAULT_DEFAULT_FOLDER=_webClipper
-      - MARKVAULT_ASSETS_FOLDER=_webClipper/assets
     volumes:
       - /path/to/obsidian-vaults:/vaults
     ports:
@@ -89,6 +85,28 @@ services:
 
 `3217:3217` exposes the server on all host network interfaces. For public
 deployments, use HTTPS, firewall rules, or your preferred access control.
+
+The extension sends the vault name, clip folder, assets folder, and tags with
+each clip. By default the server looks for vaults under `/vaults`, so the volume
+mount above is enough for normal use.
+
+### Environment Variables
+
+| Variable | Required | Default | Purpose |
+| --- | --- | --- | --- |
+| `MARKVAULT_TOKEN` | Recommended | `change-me` | Server token. The browser extension token must match this value. Use a long random value for public deployments. |
+| `MARKVAULT_HOST` | No | `0.0.0.0` | Server listen host. Docker deployments usually do not need to change it. |
+| `MARKVAULT_PORT` | No | `3217` | Internal container port. Usually change the Compose port mapping instead. |
+| `MARKVAULT_VAULTS_ROOT` | No | `/vaults` | Root folder for vaults. Not needed with the standard `./vaults:/vaults` mount. |
+| `MARKVAULT_DEFAULT_VAULT` | No | empty | Default vault name. Usually sent by the browser extension instead. |
+| `MARKVAULT_DEFAULT_FOLDER` | No | `_webClipper` | Default clip folder. Usually sent by the browser extension instead. |
+| `MARKVAULT_ASSETS_FOLDER` | No | `_webClipper/assets` | Default assets folder. Usually sent by the browser extension instead. |
+| `MARKVAULT_DEFAULT_TAGS` | No | empty | Server-side default tags. Separate multiple tags with commas. |
+| `MARKVAULT_LOCALIZE_IMAGES` | No | `true` | Whether images are downloaded by default. The extension can override it. Use `true` or `false`. |
+| `MARKVAULT_IMAGE_LINK_MODE` | No | `wikilink` | Image link style. The default is suitable for Obsidian-style vaults. |
+| `MARKVAULT_CORS_ORIGINS` | No | `*` | Allowed CORS origins. Separate multiple origins with commas. |
+| `MARKVAULT_MAX_BODY_BYTES` | No | `8388608` | Maximum request body size. Default is 8 MB. |
+| `MARKVAULT_FILENAME_DATE_PREFIX` | No | `true` | Whether saved Markdown files get a date prefix. Use `true` or `false`. |
 
 Optional JSON config files are still supported. If you mount one, create it as a
 real file before running Compose. If the host path does not exist, Docker may

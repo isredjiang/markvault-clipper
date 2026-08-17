@@ -10,7 +10,7 @@ const DEFAULT_CONFIG = {
   port: 3217,
   token: "change-me",
   vaultPath: path.resolve(process.cwd(), "vault"),
-  vaultsRoot: "",
+  vaultsRoot: "/vaults",
   defaultVaultName: "",
   defaultFolder: "_webClipper",
   assetsFolder: "_webClipper/assets",
@@ -124,7 +124,7 @@ function loadConfig() {
       throw new Error(configHelp(`Failed to parse config JSON: ${error.message}`));
     }
   } else if (!usingEnvOnly) {
-    console.warn(configHelp("Config file was not found. Starting with defaults. For Docker, set MARKVAULT_TOKEN and MARKVAULT_VAULTS_ROOT in environment, or mount a JSON config file."));
+    console.warn(configHelp("Config file was not found. Starting with defaults. For Docker, set MARKVAULT_TOKEN in environment, mount your vaults at /vaults, or mount a JSON config file for advanced options."));
   }
 
   return normalizeConfig(user, envOverrides);
