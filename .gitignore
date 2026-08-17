@@ -1,0 +1,7 @@
+node_modules/
+outputs/
+dist/
+.env
+server/config.json
+*.log
+*.zip

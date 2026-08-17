@@ -1,0 +1,21 @@
+{
+  "host": "127.0.0.1",
+  "port": 3217,
+  "token": "change-me",
+  "vaultPath": "/vault",
+  "vaultsRoot": "/vaults",
+  "defaultVaultName": "",
+  "defaultFolder": "_webClipper",
+  "assetsFolder": "_webClipper/assets",
+  "corsOrigins": ["*"],
+  "defaultTags": [],
+  "localizeImages": true,
+  "imageLinkMode": "wikilink",
+  "maxBodyBytes": 8388608,
+  "filenameDatePrefix": true,
+  "templates": {
+    "default": "---\ntitle: \"{{title}}\"\nurl: {{url}}\ncreated: {{created}}\ntags:\n{{tagsYaml}}\n---\n\n# {{title}}\n\n> Source: {{url}}\n\n{{content}}\n",
+    "selection": "---\ntitle: \"{{title}}\"\nurl: {{url}}\ncreated: {{created}}\ntags:\n{{tagsYaml}}\nclip_type: selection\n---\n\n# {{title}}\n\n> Source: {{url}}\n\n{{content}}\n"
+  },
+  "siteRules": []
+}

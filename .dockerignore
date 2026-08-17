@@ -1,0 +1,7 @@
+node_modules
+outputs
+extension
+obsidian-plugin
+.github
+*.zip
+*.log

@@ -1,0 +1,12 @@
+services:
+  markvault-clipper:
+    build: .
+    container_name: markvault-clipper
+    environment:
+      - CLIPPER_CONFIG=/app/server/config.json
+    volumes:
+      - ./server/config.json:/app/server/config.json:ro
+      - /path/to/obsidian-vaults:/vaults
+    ports:
+      - "127.0.0.1:3217:3217"
+    restart: unless-stopped

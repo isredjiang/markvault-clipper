@@ -1,0 +1,248 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --ink: #13202f;
+  --muted: #5c6b7a;
+  --line: #d9e2ea;
+  --paper: #ffffff;
+  --soft: #f4f7f8;
+  --field: #eef3f7;
+  --teal: #0f766e;
+  --blue: #1d4ed8;
+  --cyan: #22d3ee;
+  --danger: #d33c45;
+}
+
+body {
+  margin: 0;
+  width: 360px;
+  height: 600px;
+  font: 14px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--ink);
+  background:
+    linear-gradient(180deg, rgba(15, 118, 110, .08), transparent 190px),
+    var(--soft);
+  overflow: hidden;
+}
+
+.popup {
+  width: 360px;
+  height: 600px;
+  overflow-y: auto;
+  padding: 14px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 4px 2px 14px;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  border-radius: 11px;
+  color: #fff;
+  font-size: 21px;
+  font-weight: 850;
+  background: linear-gradient(180deg, var(--teal), var(--blue));
+  box-shadow: 0 10px 22px rgba(29, 78, 216, .20);
+}
+
+.app-header strong,
+.app-header span {
+  display: block;
+}
+
+.app-header strong {
+  font-size: 16px;
+  line-height: 1.15;
+}
+
+.app-header span {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.options {
+  max-width: 680px;
+  padding: 24px;
+}
+
+h1 {
+  margin: 0 0 18px;
+  font-size: 22px;
+}
+
+.panel-card {
+  margin-bottom: 16px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+}
+
+label {
+  display: block;
+  margin: 11px 0;
+  color: var(--ink);
+  font-weight: 680;
+}
+
+label span {
+  display: block;
+  margin-bottom: 6px;
+}
+
+input,
+select {
+  width: 100%;
+  height: 36px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  outline: none;
+  color: var(--ink);
+  background: var(--field);
+}
+
+input::placeholder {
+  color: #8190a1;
+}
+
+input:focus,
+select:focus {
+  border-color: rgba(34, 211, 238, .8);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .18);
+  background: #fff;
+}
+
+select {
+  cursor: pointer;
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 34px;
+}
+
+.switch-row.compact {
+  margin: 8px 0;
+}
+
+.switch-row span {
+  margin: 0;
+}
+
+.switch-row input {
+  width: 38px;
+  height: 22px;
+  flex: 0 0 auto;
+  accent-color: var(--blue);
+}
+
+button {
+  width: 100%;
+  height: 38px;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: 720;
+  transition: transform .14s ease, box-shadow .14s ease, background-color .14s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button.primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  box-shadow: 0 14px 28px rgba(29, 78, 216, .20);
+  margin: 0 0 10px;
+}
+
+button.secondary {
+  color: #174a85;
+  background: #fff;
+  border: 1px solid var(--line);
+  margin-top: 8px;
+}
+
+button.secondary:hover {
+  box-shadow: 0 8px 18px rgba(19, 32, 47, .08);
+}
+
+button.danger {
+  color: var(--danger);
+  background: #fff;
+  border: 1px solid #f0c6cc;
+  margin-top: 8px;
+}
+
+.button-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.divider {
+  height: 1px;
+  margin: 14px 0 10px;
+  background: var(--line);
+}
+
+.summary {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.summary div {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 8px;
+  margin: 4px 0;
+  color: #57606a;
+}
+
+.summary strong {
+  color: #24292f;
+}
+
+.summary span {
+  overflow-wrap: anywhere;
+}
+
+#previewBox {
+  width: 100%;
+  min-height: 180px;
+  margin-top: 8px;
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  font: 12px/1.4 ui-monospace, "SFMono-Regular", Consolas, monospace;
+  resize: vertical;
+  background: #fff;
+}
+
+#status {
+  min-height: 20px;
+  margin: 10px 0 0;
+  color: var(--muted);
+}
+
+#status.error {
+  color: var(--danger);
+}

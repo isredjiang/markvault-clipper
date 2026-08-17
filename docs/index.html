@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="MarkVault Clipper is a self-hosted Markdown web clipper for Obsidian-style vaults.">
+    <title>MarkVault Clipper</title>
+    <link rel="icon" href="assets/markvault-icon.svg" type="image/svg+xml">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #13202f;
+        --muted: #5c6b7a;
+        --line: #d9e2ea;
+        --paper: #ffffff;
+        --soft: #f4f7f8;
+        --teal: #0f766e;
+        --blue: #1d4ed8;
+        --cyan: #22d3ee;
+        --amber: #f59e0b;
+        --coral: #f97362;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font: 16px/1.65 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: var(--soft);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .shell {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 1px solid rgba(19, 32, 47, .08);
+        background: rgba(244, 247, 248, .92);
+        backdrop-filter: blur(14px);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 68px;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 760;
+      }
+
+      .brand img {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+      }
+
+      .links {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .links a,
+      .lang button {
+        padding: 8px 10px;
+        border-radius: 8px;
+        color: #405064;
+        font-size: 14px;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .links a:hover,
+      .lang button:hover,
+      .lang button.active {
+        background: #e8eef4;
+        color: var(--ink);
+      }
+
+      .lang {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        padding-left: 8px;
+        border-left: 1px solid var(--line);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.02fr) minmax(360px, .98fr);
+        align-items: center;
+        gap: 42px;
+        min-height: calc(100vh - 68px);
+        padding: 54px 0 36px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 10px;
+        border: 1px solid #bdd6de;
+        border-radius: 999px;
+        color: #0d605a;
+        background: #e7f5f3;
+        font-size: 13px;
+        font-weight: 650;
+      }
+
+      h1 {
+        margin: 18px 0 16px;
+        font-size: clamp(44px, 7vw, 82px);
+        line-height: .96;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 720px;
+        margin: 0;
+        color: var(--muted);
+        font-size: clamp(18px, 2vw, 22px);
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 18px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: var(--paper);
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      .button.primary {
+        border-color: transparent;
+        color: #fff;
+        background: linear-gradient(135deg, var(--teal), var(--blue));
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+      }
+
+      .hero-note {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+        color: #4c5b68;
+        font-size: 14px;
+      }
+
+      .hero-note span {
+        padding: 6px 9px;
+        border-radius: 7px;
+        background: #fff;
+        border: 1px solid #dde6ed;
+      }
+
+      .product-shot {
+        position: relative;
+        min-height: 560px;
+      }
+
+      .browser-frame {
+        position: absolute;
+        inset: 42px 0 auto auto;
+        width: min(520px, 100%);
+        min-height: 420px;
+        border: 1px solid #d6e0e8;
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 24px 70px rgba(19, 32, 47, .15);
+        overflow: hidden;
+      }
+
+      .frame-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 42px;
+        padding: 0 14px;
+        border-bottom: 1px solid #e3e9ef;
+        background: #f8fafc;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: #cad5df;
+      }
+
+      .article {
+        padding: 24px 28px;
+      }
+
+      .article h2 {
+        margin: 0 0 12px;
+        font-size: 30px;
+        line-height: 1.1;
+      }
+
+      .article p {
+        margin: 0 0 12px;
+        color: #5b6979;
+      }
+
+      .article-line {
+        height: 12px;
+        margin: 12px 0;
+        border-radius: 999px;
+        background: #e6edf2;
+      }
+
+      .article-line.short {
+        width: 58%;
+      }
+
+      .clipper-panel {
+        position: absolute;
+        right: 34px;
+        bottom: 0;
+        width: min(360px, calc(100% - 24px));
+        padding: 14px;
+        border: 1px solid #d9e2ea;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 22px 64px rgba(19, 32, 47, .22);
+      }
+
+      .clipper-panel .primary-bar {
+        display: grid;
+        place-items: center;
+        height: 38px;
+        border-radius: 7px;
+        color: #fff;
+        font-weight: 760;
+        background: linear-gradient(135deg, var(--teal), var(--blue));
+      }
+
+      .field {
+        margin-top: 11px;
+      }
+
+      .field span {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 13px;
+        font-weight: 680;
+      }
+
+      .input {
+        height: 35px;
+        border-radius: 7px;
+        padding: 8px 10px;
+        color: #748194;
+        background: #f0f4f8;
+      }
+
+      .switches {
+        display: grid;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .switch {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+      }
+
+      .toggle {
+        width: 38px;
+        height: 22px;
+        border-radius: 999px;
+        background: #cbd5df;
+      }
+
+      .toggle.on {
+        background: var(--blue);
+      }
+
+      section {
+        padding: 76px 0;
+      }
+
+      .section-head {
+        max-width: 760px;
+        margin-bottom: 28px;
+      }
+
+      .section-head h2 {
+        margin: 0 0 10px;
+        font-size: clamp(30px, 4vw, 46px);
+        line-height: 1.05;
+      }
+
+      .section-head p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .card {
+        min-height: 210px;
+        padding: 22px;
+        border: 1px solid #dce5eb;
+        border-radius: 8px;
+        background: #fff;
+      }
+
+      .card .icon {
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        margin-bottom: 18px;
+        border-radius: 8px;
+        color: #fff;
+        background: var(--teal);
+        font-weight: 800;
+      }
+
+      .card:nth-child(2n) .icon {
+        background: var(--blue);
+      }
+
+      .card:nth-child(3n) .icon {
+        background: var(--coral);
+      }
+
+      .card h3 {
+        margin: 0 0 8px;
+        font-size: 20px;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .workflow {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        border: 1px solid #dce5eb;
+        border-radius: 8px;
+        background: #fff;
+        overflow: hidden;
+      }
+
+      .step {
+        min-height: 180px;
+        padding: 22px;
+        border-right: 1px solid #dce5eb;
+      }
+
+      .step:last-child {
+        border-right: 0;
+      }
+
+      .step strong {
+        display: block;
+        margin-bottom: 14px;
+        color: var(--blue);
+        font-size: 14px;
+      }
+
+      .step h3 {
+        margin: 0 0 8px;
+      }
+
+      .step p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .deploy {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      pre {
+        min-height: 100%;
+        margin: 0;
+        padding: 18px;
+        overflow-x: auto;
+        border-radius: 8px;
+        color: #dcefff;
+        background: #142331;
+        font: 14px/1.6 ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      }
+
+      .footer-cta {
+        padding: 62px 0;
+        color: #fff;
+        background: #13202f;
+      }
+
+      .footer-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .footer-inner h2 {
+        margin: 0 0 8px;
+        font-size: clamp(28px, 4vw, 44px);
+      }
+
+      .footer-inner p {
+        margin: 0;
+        color: #b8c5d1;
+      }
+
+      .footer-inner .button {
+        border-color: rgba(255, 255, 255, .2);
+      }
+
+      [data-lang="en"] .zh,
+      [data-lang="zh"] .en {
+        display: none;
+      }
+
+      @media (max-width: 900px) {
+        .hero,
+        .deploy,
+        .footer-inner {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          min-height: auto;
+        }
+
+        .product-shot {
+          min-height: 520px;
+        }
+
+        .grid,
+        .workflow {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .step:nth-child(2) {
+          border-right: 0;
+        }
+
+        .step:nth-child(1),
+        .step:nth-child(2) {
+          border-bottom: 1px solid #dce5eb;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .links a {
+          display: none;
+        }
+
+        .hero {
+          padding-top: 36px;
+        }
+
+        .grid,
+        .workflow {
+          grid-template-columns: 1fr;
+        }
+
+        .step,
+        .step:nth-child(2) {
+          border-right: 0;
+          border-bottom: 1px solid #dce5eb;
+        }
+
+        .step:last-child {
+          border-bottom: 0;
+        }
+
+        .browser-frame {
+          position: relative;
+          inset: auto;
+        }
+
+        .clipper-panel {
+          right: 12px;
+          bottom: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body data-lang="zh">
+    <header class="topbar">
+      <nav class="shell nav" aria-label="Main navigation">
+        <a class="brand" href="#">
+          <img src="assets/markvault-icon.svg" alt="">
+          <span>MarkVault Clipper</span>
+        </a>
+        <div class="links">
+          <a href="#features"><span class="zh">特性</span><span class="en">Features</span></a>
+          <a href="#workflow"><span class="zh">流程</span><span class="en">Workflow</span></a>
+          <a href="#deploy"><span class="zh">部署</span><span class="en">Deploy</span></a>
+          <div class="lang" aria-label="Language">
+            <button class="active" type="button" data-set-lang="zh">简体中文</button>
+            <button type="button" data-set-lang="en">English</button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="shell hero">
+        <div>
+          <div class="eyebrow">
+            <span class="zh">自托管 Markdown 网页剪藏</span>
+            <span class="en">Self-hosted Markdown web clipping</span>
+          </div>
+          <h1>MarkVault Clipper</h1>
+          <p class="lead zh">把网页正文、选中文本和图片资源剪藏到你的 Obsidian 风格本地库。浏览器扩展负责提取与转换，Docker 服务端只负责安全写入文件。</p>
+          <p class="lead en">Clip readable articles, selections, and page assets into your Obsidian-style vault. The browser extension converts content; the Docker server writes files safely.</p>
+          <div class="actions">
+            <a class="button primary" href="https://github.com/isredjiang/markvault-clipper" target="_blank" rel="noreferrer">
+              <span class="zh">查看 GitHub</span>
+              <span class="en">View on GitHub</span>
+            </a>
+            <a class="button" href="#deploy">
+              <span class="zh">部署服务端</span>
+              <span class="en">Deploy server</span>
+            </a>
+            <a class="button" href="#features">
+              <span class="zh">了解功能</span>
+              <span class="en">Explore features</span>
+            </a>
+          </div>
+          <div class="hero-note">
+            <span>Readability</span>
+            <span>Turndown/GFM</span>
+            <span>Docker API</span>
+            <span>Edge / Chrome MV3</span>
+          </div>
+        </div>
+
+        <div class="product-shot" aria-label="Product preview">
+          <div class="browser-frame">
+            <div class="frame-bar">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </div>
+            <div class="article">
+              <h2 class="zh">一篇网页文章</h2>
+              <h2 class="en">A web article</h2>
+              <p class="zh">正文、标题、作者、摘要和图片资源会被整理成干净的 Markdown。</p>
+              <p class="en">Title, author, excerpt, body, and assets become clean Markdown.</p>
+              <div class="article-line"></div>
+              <div class="article-line"></div>
+              <div class="article-line short"></div>
+            </div>
+          </div>
+
+          <div class="clipper-panel">
+            <div class="primary-bar">
+              <span class="zh">自动剪藏</span>
+              <span class="en">Auto clip</span>
+            </div>
+            <div class="field">
+              <span class="zh">库名称</span>
+              <span class="en">Vault name</span>
+              <div class="input">MyVault</div>
+            </div>
+            <div class="field">
+              <span class="zh">剪藏路径</span>
+              <span class="en">Clip folder</span>
+              <div class="input">_webClipper</div>
+            </div>
+            <div class="field">
+              <span class="zh">资源路径</span>
+              <span class="en">Assets folder</span>
+              <div class="input">_webClipper/assets</div>
+            </div>
+            <div class="switches">
+              <div class="switch">
+                <span class="zh">仅剪藏选中文本</span>
+                <span class="en">Selection only</span>
+                <span class="toggle"></span>
+              </div>
+              <div class="switch">
+                <span class="zh">下载资源</span>
+                <span class="en">Download assets</span>
+                <span class="toggle on"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="shell">
+        <div class="section-head">
+          <h2 class="zh">不是把网页塞进笔记，而是变成可维护的 Markdown。</h2>
+          <h2 class="en">Not a page dump. A maintainable Markdown note.</h2>
+          <p class="zh">转换发生在浏览器端，服务端只接收最终 Markdown 并写入指定库。路径清晰，权限简单，后续可以接任何打开本地库的工具。</p>
+          <p class="en">Conversion happens in the browser. The server only receives final Markdown and writes it into the selected vault.</p>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <div class="icon">R</div>
+            <h3 class="zh">正文提取</h3>
+            <h3 class="en">Readable extraction</h3>
+            <p class="zh">使用 Mozilla Readability 提取主体内容，减少导航、广告和侧栏干扰。</p>
+            <p class="en">Uses Mozilla Readability to reduce navigation, ads, and sidebar noise.</p>
+          </article>
+          <article class="card">
+            <div class="icon">M</div>
+            <h3 class="zh">Markdown 转换</h3>
+            <h3 class="en">Markdown conversion</h3>
+            <p class="zh">基于 Turndown 与 GFM，保留标题、链接、列表、代码块和表格结构。</p>
+            <p class="en">Powered by Turndown and GFM for headings, links, lists, code, and tables.</p>
+          </article>
+          <article class="card">
+            <div class="icon">V</div>
+            <h3 class="zh">多库写入</h3>
+            <h3 class="en">Multi-vault writes</h3>
+            <p class="zh">前端填写库名称，服务端只允许写入已存在的库，避免路径乱跑。</p>
+            <p class="en">Choose the vault in the popup. The server rejects missing vaults.</p>
+          </article>
+          <article class="card">
+            <div class="icon">A</div>
+            <h3 class="zh">资源本地化</h3>
+            <h3 class="en">Local assets</h3>
+            <p class="zh">可选下载页面图片到资源目录，并把链接改成本地 Obsidian 路径。</p>
+            <p class="en">Optionally downloads page images and rewrites links to local vault paths.</p>
+          </article>
+          <article class="card">
+            <div class="icon">T</div>
+            <h3 class="zh">模板保存</h3>
+            <h3 class="en">Saved templates</h3>
+            <p class="zh">保存常用库、路径、标签和剪藏偏好，下一次直接选择模板。</p>
+            <p class="en">Save vault, folders, tags, and clipping preferences for repeated use.</p>
+          </article>
+          <article class="card">
+            <div class="icon">D</div>
+            <h3 class="zh">本地下载</h3>
+            <h3 class="en">Local download</h3>
+            <p class="zh">不连服务端也能直接下载 Markdown，方便临时保存或对比转换效果。</p>
+            <p class="en">Download Markdown directly from the browser without using the server.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="workflow" class="shell">
+        <div class="section-head">
+          <h2 class="zh">清楚的前后端分工。</h2>
+          <h2 class="en">A clear browser/server split.</h2>
+          <p class="zh">浏览器负责理解网页，服务端负责把文件放到正确的位置。</p>
+          <p class="en">The browser understands the page. The server places files where they belong.</p>
+        </div>
+        <div class="workflow">
+          <div class="step">
+            <strong>01</strong>
+            <h3 class="zh">打开网页</h3>
+            <h3 class="en">Open page</h3>
+            <p class="zh">在 Edge 或 Chrome 中打开需要保存的文章。</p>
+            <p class="en">Open the article in Edge or Chrome.</p>
+          </div>
+          <div class="step">
+            <strong>02</strong>
+            <h3 class="zh">转换 Markdown</h3>
+            <h3 class="en">Convert Markdown</h3>
+            <p class="zh">扩展提取正文并在本地转换成 Markdown。</p>
+            <p class="en">The extension extracts content and converts it locally.</p>
+          </div>
+          <div class="step">
+            <strong>03</strong>
+            <h3 class="zh">发送服务端</h3>
+            <h3 class="en">Send to server</h3>
+            <p class="zh">只发送最终 Markdown、库名、路径和资源设置。</p>
+            <p class="en">Only final Markdown and destination settings are sent.</p>
+          </div>
+          <div class="step">
+            <strong>04</strong>
+            <h3 class="zh">写入本地库</h3>
+            <h3 class="en">Write vault</h3>
+            <p class="zh">服务端创建文件夹、保存笔记，并按需下载资源。</p>
+            <p class="en">The server creates folders, saves notes, and downloads assets.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="deploy" class="shell">
+        <div class="section-head">
+          <h2 class="zh">Docker 部署，GitHub Pages 宣传。</h2>
+          <h2 class="en">Docker for the API, GitHub Pages for the site.</h2>
+          <p class="zh">服务端部署到你的主机，浏览器扩展连接 HTTPS 地址。这个页面本身可以直接放到 GitHub Pages。</p>
+          <p class="en">Deploy the API on your host, connect the extension to the HTTPS endpoint, and host this page with GitHub Pages.</p>
+        </div>
+        <div class="deploy">
+          <pre><code>services:
+  markvault-clipper:
+    image: markvault-clipper:latest
+    container_name: markvault-clipper
+    volumes:
+      - ./server/config.json:/app/server/config.json:ro
+      - /path/to/obsidian-vaults:/vaults
+    ports:
+      - "127.0.0.1:3217:3217"</code></pre>
+          <pre><code>GET /
+{
+  "ok": true,
+  "name": "MarkVault Clipper",
+  "messageZh": "MarkVault Clipper API 连接成功。"
+}</code></pre>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-cta">
+      <div class="shell footer-inner">
+        <div>
+          <h2 class="zh">把网页资料变成自己的知识库。</h2>
+          <h2 class="en">Turn web pages into your own vault.</h2>
+          <p class="zh">自托管、可迁移、Markdown 优先。</p>
+          <p class="en">Self-hosted, portable, and Markdown-first.</p>
+        </div>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/isredjiang/markvault-clipper" target="_blank" rel="noreferrer">
+            <span class="zh">前往 GitHub</span>
+            <span class="en">Open GitHub</span>
+          </a>
+          <a class="button" href="#deploy">
+            <span class="zh">查看部署</span>
+            <span class="en">View deploy</span>
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const root = document.body;
+      const buttons = document.querySelectorAll("[data-set-lang]");
+      const saved = localStorage.getItem("markvault-lang");
+      const preferZh = navigator.language.toLowerCase().startsWith("zh");
+      setLang(saved || (preferZh ? "zh" : "en"));
+
+      buttons.forEach(button => {
+        button.addEventListener("click", () => {
+          setLang(button.dataset.setLang);
+          localStorage.setItem("markvault-lang", button.dataset.setLang);
+        });
+      });
+
+      function setLang(lang) {
+        root.dataset.lang = lang;
+        document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+        buttons.forEach(button => button.classList.toggle("active", button.dataset.setLang === lang));
+      }
+    </script>
+  </body>
+</html>

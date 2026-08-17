@@ -1,0 +1,16 @@
+{
+  "name": "markvault-clipper",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build:extension": "esbuild extension/popup.js --bundle --format=iife --target=chrome100 --outfile=extension/popup.bundle.js"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.5.0",
+    "turndown": "^7.2.0",
+    "turndown-plugin-gfm": "^1.0.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.23.1"
+  }
+}

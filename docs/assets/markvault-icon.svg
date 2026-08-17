@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">MarkVault Clipper</title>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#0f766e"/>
+      <stop offset="1" stop-color="#1d4ed8"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="54" fill="url(#bg)"/>
+  <rect x="24" y="26" width="208" height="204" rx="42" fill="#14b8a6" opacity=".18"/>
+  <path d="M88 52h86l30 30v114H88z" fill="#fff"/>
+  <path d="M174 52v30h30z" fill="#dbeafe"/>
+  <path d="M116 111h59M116 137h70M116 163h48" fill="none" stroke="#1e3a8a" stroke-width="12" stroke-linecap="round"/>
+  <path d="M46 163V87l25 39 25-39v76M46 202h48" fill="none" stroke="#22d3ee" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
