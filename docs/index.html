@@ -743,7 +743,8 @@
       - ./server/config.json:/app/server/config.json:ro
       - /path/to/obsidian-vaults:/vaults
     ports:
-      - "127.0.0.1:3217:3217"</code></pre>
+      - "3217:3217"</code></pre>
+          <p class="muted" data-i18n-zh="默认示例会把 3217 端口暴露到宿主机所有网卡。公网部署时建议配合 HTTPS 反向代理、防火墙或访问控制使用。" data-i18n-en="The default example exposes port 3217 on all host network interfaces. For public deployments, use HTTPS, firewall rules, or access control.">默认示例会把 3217 端口暴露到宿主机所有网卡。公网部署时建议配合 HTTPS 反向代理、防火墙或访问控制使用。</p>
           <pre><code>GET /
 {
   "ok": true,

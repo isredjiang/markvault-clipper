@@ -40,9 +40,12 @@ services:
       - ./server/config.json:/app/server/config.json:ro
       - /path/to/obsidian-vaults:/vaults
     ports:
-      - "127.0.0.1:3217:3217"
+      - "3217:3217"
     restart: unless-stopped
 ```
+
+`3217:3217` exposes the service on all host network interfaces. For public
+servers, keep it behind HTTPS, firewall rules, or access control.
 
 Put it behind HTTPS with your existing reverse proxy.
 

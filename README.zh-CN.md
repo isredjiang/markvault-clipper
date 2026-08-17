@@ -71,9 +71,11 @@ services:
       - ./server/config.json:/app/server/config.json:ro
       - /path/to/obsidian-vaults:/vaults
     ports:
-      - "127.0.0.1:3217:3217"
+      - "3217:3217"
     restart: unless-stopped
 ```
+
+`3217:3217` 会把服务端口暴露到宿主机所有网卡。公网部署时建议配合 HTTPS 反向代理、防火墙或访问控制使用。
 
 部署后访问：
 

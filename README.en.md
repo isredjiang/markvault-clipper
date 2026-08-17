@@ -75,9 +75,12 @@ services:
       - ./server/config.json:/app/server/config.json:ro
       - /path/to/obsidian-vaults:/vaults
     ports:
-      - "127.0.0.1:3217:3217"
+      - "3217:3217"
     restart: unless-stopped
 ```
+
+`3217:3217` exposes the server on all host network interfaces. For public
+deployments, use HTTPS, firewall rules, or your preferred access control.
 
 After deployment, open:
 
