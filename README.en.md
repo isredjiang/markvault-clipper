@@ -45,25 +45,9 @@ browser extension
 
 ## Docker
 
-Copy `server/config.example.json` to `server/config.json`, then change at least:
-
-```json
-{
-  "host": "0.0.0.0",
-  "port": 3217,
-  "token": "use-a-long-random-token",
-  "vaultsRoot": "/vaults"
-}
-```
-
-Create the config file before running Compose. If the host path does not exist,
-Docker may create `config.json` as a directory, which older versions reported as
-`EISDIR`.
-
-```text
-mkdir -p server
-cp server/config.example.json server/config.json
-```
+For a normal Docker deployment, put the basic settings directly in Compose. A
+JSON config file is optional and mainly useful for advanced templates or
+site-specific rules.
 
 Use the published image:
 
@@ -91,9 +75,12 @@ services:
     image: isredjiang/markvault-clipper:latest
     container_name: markvault-clipper
     environment:
-      - CLIPPER_CONFIG=/app/server/config.json
+      - MARKVAULT_TOKEN=use-a-long-random-token
+      - MARKVAULT_VAULTS_ROOT=/vaults
+      - MARKVAULT_DEFAULT_VAULT=MyVault
+      - MARKVAULT_DEFAULT_FOLDER=_webClipper
+      - MARKVAULT_ASSETS_FOLDER=_webClipper/assets
     volumes:
-      - ./server/config.json:/app/server/config.json:ro
       - /path/to/obsidian-vaults:/vaults
     ports:
       - "3217:3217"
@@ -102,6 +89,10 @@ services:
 
 `3217:3217` exposes the server on all host network interfaces. For public
 deployments, use HTTPS, firewall rules, or your preferred access control.
+
+Optional JSON config files are still supported. If you mount one, create it as a
+real file before running Compose. If the host path does not exist, Docker may
+create `config.json` as a directory.
 
 After deployment, open:
 

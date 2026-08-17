@@ -755,8 +755,11 @@
   markvault-clipper:
     image: isredjiang/markvault-clipper:latest
     container_name: markvault-clipper
+    environment:
+      - MARKVAULT_TOKEN=change-this-token
+      - MARKVAULT_VAULTS_ROOT=/vaults
+      - MARKVAULT_DEFAULT_VAULT=MyVault
     volumes:
-      - ./server/config.json:/app/server/config.json:ro
       - /path/to/obsidian-vaults:/vaults
     ports:
       - "3217:3217"</code></pre>

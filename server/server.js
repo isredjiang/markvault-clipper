@@ -2,7 +2,6 @@ const http = require("http");
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
-const crypto = require("crypto");
 
 const CONFIG_PATH = process.env.CLIPPER_CONFIG || path.join(__dirname, "config.json");
 const SERVICE_NAME = "MarkVault Clipper";
@@ -49,21 +48,52 @@ function configHelp(extra = "") {
   ].join("\n");
 }
 
-function writeDefaultConfig() {
-  const generated = {
-    ...DEFAULT_CONFIG,
-    token: crypto.randomBytes(24).toString("hex"),
-    vaultPath: "/vault",
-    vaultsRoot: "/vaults"
-  };
-  fs.mkdirSync(path.dirname(CONFIG_PATH), { recursive: true });
-  fs.writeFileSync(CONFIG_PATH, `${JSON.stringify(generated, null, 2)}\n`, "utf8");
-  console.warn(configHelp(`Config file was missing, so a starter config was created. Change the token before exposing the service.`));
-  return generated;
+function envBool(value) {
+  if (value == null || value === "") return undefined;
+  return /^(1|true|yes|on)$/i.test(String(value));
 }
 
-function normalizeConfig(user) {
-  const normalized = { ...user };
+function envList(value) {
+  if (value == null || value === "") return undefined;
+  return String(value).split(",").map(item => item.trim()).filter(Boolean);
+}
+
+function envNumber(value) {
+  if (value == null || value === "") return undefined;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : undefined;
+}
+
+function envConfig() {
+  const env = process.env;
+  const result = {};
+  const entries = [
+    ["MARKVAULT_HOST", "host"],
+    ["MARKVAULT_PORT", "port", envNumber],
+    ["MARKVAULT_TOKEN", "token"],
+    ["MARKVAULT_VAULT_PATH", "vaultPath"],
+    ["MARKVAULT_VAULTS_ROOT", "vaultsRoot"],
+    ["MARKVAULT_DEFAULT_VAULT", "defaultVaultName"],
+    ["MARKVAULT_DEFAULT_FOLDER", "defaultFolder"],
+    ["MARKVAULT_ASSETS_FOLDER", "assetsFolder"],
+    ["MARKVAULT_CORS_ORIGINS", "corsOrigins", envList],
+    ["MARKVAULT_DEFAULT_TAGS", "defaultTags", envList],
+    ["MARKVAULT_LOCALIZE_IMAGES", "localizeImages", envBool],
+    ["MARKVAULT_IMAGE_LINK_MODE", "imageLinkMode"],
+    ["MARKVAULT_MAX_BODY_BYTES", "maxBodyBytes", envNumber],
+    ["MARKVAULT_FILENAME_DATE_PREFIX", "filenameDatePrefix", envBool]
+  ];
+
+  for (const [envName, key, transform] of entries) {
+    const raw = env[envName];
+    const value = transform ? transform(raw) : raw;
+    if (value !== undefined && value !== "") result[key] = value;
+  }
+  return result;
+}
+
+function normalizeConfig(user, envOverrides = {}) {
+  const normalized = { ...user, ...envOverrides };
   if (normalized.vaultRoot && !normalized.vaultsRoot) {
     normalized.vaultsRoot = normalized.vaultRoot;
   }
@@ -75,22 +105,29 @@ function normalizeConfig(user) {
 }
 
 function loadConfig() {
-  if (!fs.existsSync(CONFIG_PATH)) return writeDefaultConfig();
+  let user = {};
+  const envOverrides = envConfig();
+  const usingEnvOnly = !fs.existsSync(CONFIG_PATH) && Object.keys(envOverrides).length > 0;
 
-  const stat = fs.statSync(CONFIG_PATH);
-  if (stat.isDirectory()) {
-    throw new Error(configHelp("The config path is a directory, not a file. Delete that directory and create config.json as a real JSON file."));
-  }
-  if (!stat.isFile()) {
-    throw new Error(configHelp("The config path exists, but it is not a regular file."));
+  if (fs.existsSync(CONFIG_PATH)) {
+    const stat = fs.statSync(CONFIG_PATH);
+    if (stat.isDirectory()) {
+      throw new Error(configHelp("The config path is a directory, not a file. Delete that directory and create config.json as a real JSON file, or remove the CLIPPER_CONFIG mount and use MARKVAULT_* environment variables."));
+    }
+    if (!stat.isFile()) {
+      throw new Error(configHelp("The config path exists, but it is not a regular file."));
+    }
+
+    try {
+      user = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8").replace(/^\uFEFF/, ""));
+    } catch (error) {
+      throw new Error(configHelp(`Failed to parse config JSON: ${error.message}`));
+    }
+  } else if (!usingEnvOnly) {
+    console.warn(configHelp("Config file was not found. Starting with defaults. For Docker, set MARKVAULT_TOKEN and MARKVAULT_VAULTS_ROOT in environment, or mount a JSON config file."));
   }
 
-  try {
-    const user = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8").replace(/^\uFEFF/, ""));
-    return normalizeConfig(user);
-  } catch (error) {
-    throw new Error(configHelp(`Failed to parse config JSON: ${error.message}`));
-  }
+  return normalizeConfig(user, envOverrides);
 }
 
 let config;

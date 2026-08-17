@@ -41,24 +41,8 @@ Obsidian 风格的本地库。它不绑定 Ignis：只要目标应用能打开�
 
 ## Docker 部署
 
-复制 `server/config.example.json` 为 `server/config.json`，至少修改：
-
-```json
-{
-  "host": "0.0.0.0",
-  "port": 3217,
-  "token": "use-a-long-random-token",
-  "vaultsRoot": "/vaults"
-}
-```
-
-运行 Compose 前请先把 `config.json` 创建成真正的文件。如果宿主机路径不存在，
-Docker 可能会把 `config.json` 自动创建成目录，旧版本会因此报 `EISDIR`。
-
-```text
-mkdir -p server
-cp server/config.example.json server/config.json
-```
+普通 Docker 部署可以直接把基础参数写在 Compose 的 `environment` 里。
+`config.json` 变成可选项，主要用于复杂模板或针对不同网站的规则。
 
 使用已发布镜像：
 
@@ -86,9 +70,12 @@ services:
     image: isredjiang/markvault-clipper:latest
     container_name: markvault-clipper
     environment:
-      - CLIPPER_CONFIG=/app/server/config.json
+      - MARKVAULT_TOKEN=use-a-long-random-token
+      - MARKVAULT_VAULTS_ROOT=/vaults
+      - MARKVAULT_DEFAULT_VAULT=MyVault
+      - MARKVAULT_DEFAULT_FOLDER=_webClipper
+      - MARKVAULT_ASSETS_FOLDER=_webClipper/assets
     volumes:
-      - ./server/config.json:/app/server/config.json:ro
       - /path/to/obsidian-vaults:/vaults
     ports:
       - "3217:3217"
@@ -96,6 +83,9 @@ services:
 ```
 
 `3217:3217` 会把服务端口暴露到宿主机所有网卡。公网部署时建议配合 HTTPS 反向代理、防火墙或访问控制使用。
+
+仍然支持挂载 JSON 配置文件。如果你要挂载 `config.json`，请先把它创建成真正的文件；
+如果宿主机路径不存在，Docker 可能会把 `config.json` 自动创建成目录。
 
 部署后访问：
 
