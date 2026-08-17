@@ -56,7 +56,13 @@ Copy `server/config.example.json` to `server/config.json`, then change at least:
 }
 ```
 
-Build the image:
+Use the published image:
+
+```text
+docker pull ghcr.io/isredjiang/markvault-clipper:latest
+```
+
+Or build it locally:
 
 ```text
 docker build -t markvault-clipper .
@@ -67,7 +73,7 @@ Example Compose:
 ```yaml
 services:
   markvault-clipper:
-    image: markvault-clipper:latest
+    image: ghcr.io/isredjiang/markvault-clipper:latest
     container_name: markvault-clipper
     environment:
       - CLIPPER_CONFIG=/app/server/config.json

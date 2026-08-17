@@ -1,6 +1,6 @@
 services:
   markvault-clipper:
-    build: .
+    image: ghcr.io/isredjiang/markvault-clipper:latest
     container_name: markvault-clipper
     environment:
       - CLIPPER_CONFIG=/app/server/config.json

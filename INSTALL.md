@@ -32,7 +32,7 @@ Mount the parent folder of your vaults:
 ```yaml
 services:
   markvault-clipper:
-    image: ghcr.io/YOUR_NAME/markvault-clipper:latest
+    image: ghcr.io/isredjiang/markvault-clipper:latest
     container_name: markvault-clipper
     environment:
       - CLIPPER_CONFIG=/app/server/config.json

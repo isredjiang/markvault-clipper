@@ -52,7 +52,13 @@ Obsidian 风格的本地库。它不绑定 Ignis：只要目标应用能打开�
 }
 ```
 
-构建镜像：
+使用已发布镜像：
+
+```text
+docker pull ghcr.io/isredjiang/markvault-clipper:latest
+```
+
+也可以本地构建镜像：
 
 ```text
 docker build -t markvault-clipper .
@@ -63,7 +69,7 @@ docker build -t markvault-clipper .
 ```yaml
 services:
   markvault-clipper:
-    image: markvault-clipper:latest
+    image: ghcr.io/isredjiang/markvault-clipper:latest
     container_name: markvault-clipper
     environment:
       - CLIPPER_CONFIG=/app/server/config.json
