@@ -569,12 +569,12 @@
       <section class="shell hero">
         <div>
           <div class="eyebrow">
-            <span class="zh">自托管 Markdown 网页剪藏</span>
+            <span class="zh">网页剪藏到自己的 Markdown 文件</span>
             <span class="en">Self-hosted Markdown web clipping</span>
           </div>
           <h1>MarkVault Clipper</h1>
-          <p class="lead zh">把网页正文、选中文本和图片资源剪藏到你的 Obsidian 风格本地库。浏览器扩展负责提取与转换，Docker 服务端只负责安全写入文件。</p>
-          <p class="lead en">Clip readable articles, selections, and page assets into your Obsidian-style vault. The browser extension converts content; the Docker server writes files safely.</p>
+          <p class="lead zh">打开网页，点一下扩展，就能把正文整理成 Markdown。可以直接下载，也可以发到你自己部署的服务端，保存到指定的笔记库。</p>
+          <p class="lead en">Turn web pages into Markdown in the browser, download them locally, or send them to your own backend and save them into a chosen vault.</p>
           <div class="actions">
             <a class="button primary" href="https://github.com/isredjiang/markvault-clipper" target="_blank" rel="noreferrer">
               <span class="zh">查看 GitHub</span>
@@ -605,10 +605,10 @@
               <span class="dot"></span>
             </div>
             <div class="article">
-              <h2 class="zh">一篇网页文章</h2>
+              <h2 class="zh">网页文章</h2>
               <h2 class="en">A web article</h2>
-              <p class="zh">正文、标题、作者、摘要和图片资源会被整理成干净的 Markdown。</p>
-              <p class="en">Title, author, excerpt, body, and assets become clean Markdown.</p>
+              <p class="zh">正文、标题、链接和图片会被整理成更适合保存的 Markdown。</p>
+              <p class="en">Body, title, links, and images are cleaned up into Markdown that is easier to keep.</p>
               <div class="article-line"></div>
               <div class="article-line"></div>
               <div class="article-line short"></div>
@@ -653,52 +653,52 @@
 
       <section id="features" class="shell">
         <div class="section-head">
-          <h2 class="zh">不是把网页塞进笔记，而是变成可维护的 Markdown。</h2>
-          <h2 class="en">Not a page dump. A maintainable Markdown note.</h2>
-          <p class="zh">转换发生在浏览器端，服务端只接收最终 Markdown 并写入指定库。路径清晰，权限简单，后续可以接任何打开本地库的工具。</p>
-          <p class="en">Conversion happens in the browser. The server only receives final Markdown and writes it into the selected vault.</p>
+          <h2 class="zh">剪下来的是 Markdown，不是网页残片。</h2>
+          <h2 class="en">Clip once, keep a note you can still edit.</h2>
+          <p class="zh">扩展负责提取正文、转格式；服务端只按你填的库名和路径保存文件。以后换 Obsidian、Ignis 或别的 Markdown 工具，文件还在自己手里。</p>
+          <p class="en">The extension extracts and converts content in the browser. The backend only writes the result to the vault and folders you choose.</p>
         </div>
         <div class="grid">
           <article class="card">
             <div class="icon">R</div>
-            <h3 class="zh">正文提取</h3>
+            <h3 class="zh">提取正文</h3>
             <h3 class="en">Readable extraction</h3>
-            <p class="zh">使用 Mozilla Readability 提取主体内容，减少导航、广告和侧栏干扰。</p>
+            <p class="zh">用 Readability 尽量抓文章主体，少带导航、广告、推荐栏这些杂项。</p>
             <p class="en">Uses Mozilla Readability to reduce navigation, ads, and sidebar noise.</p>
           </article>
           <article class="card">
             <div class="icon">M</div>
-            <h3 class="zh">Markdown 转换</h3>
+            <h3 class="zh">转成 Markdown</h3>
             <h3 class="en">Markdown conversion</h3>
-            <p class="zh">基于 Turndown 与 GFM，保留标题、链接、列表、代码块和表格结构。</p>
+            <p class="zh">标题、链接、列表、代码块、表格尽量保留下来，方便后面继续编辑。</p>
             <p class="en">Powered by Turndown and GFM for headings, links, lists, code, and tables.</p>
           </article>
           <article class="card">
             <div class="icon">V</div>
-            <h3 class="zh">多库写入</h3>
+            <h3 class="zh">选择笔记库</h3>
             <h3 class="en">Multi-vault writes</h3>
-            <p class="zh">前端填写库名称，服务端只允许写入已存在的库，避免路径乱跑。</p>
+            <p class="zh">在扩展里填写库名；服务端只接受已配置的库，避免文件写到奇怪的位置。</p>
             <p class="en">Choose the vault in the popup. The server rejects missing vaults.</p>
           </article>
           <article class="card">
             <div class="icon">A</div>
-            <h3 class="zh">资源本地化</h3>
+            <h3 class="zh">保存图片</h3>
             <h3 class="en">Local assets</h3>
-            <p class="zh">可选下载页面图片到资源目录，并把链接改成本地 Obsidian 路径。</p>
+            <p class="zh">需要时把页面图片下载到资源目录，并把正文里的图片链接改成本地路径。</p>
             <p class="en">Optionally downloads page images and rewrites links to local vault paths.</p>
           </article>
           <article class="card">
             <div class="icon">T</div>
-            <h3 class="zh">模板保存</h3>
+            <h3 class="zh">保存常用配置</h3>
             <h3 class="en">Saved templates</h3>
-            <p class="zh">保存常用库、路径、标签和剪藏偏好，下一次直接选择模板。</p>
+            <p class="zh">常用的库名、剪藏路径、资源路径和标签可以保存成模板，少重复填写。</p>
             <p class="en">Save vault, folders, tags, and clipping preferences for repeated use.</p>
           </article>
           <article class="card">
             <div class="icon">D</div>
-            <h3 class="zh">本地下载</h3>
+            <h3 class="zh">直接下载</h3>
             <h3 class="en">Local download</h3>
-            <p class="zh">不连服务端也能直接下载 Markdown，方便临时保存或对比转换效果。</p>
+            <p class="zh">不想写入服务端时，也能直接下载 Markdown 文件，先看看转换结果。</p>
             <p class="en">Download Markdown directly from the browser without using the server.</p>
           </article>
         </div>
@@ -706,38 +706,38 @@
 
       <section id="workflow" class="shell">
         <div class="section-head">
-          <h2 class="zh">清楚的前后端分工。</h2>
-          <h2 class="en">A clear browser/server split.</h2>
-          <p class="zh">浏览器负责理解网页，服务端负责把文件放到正确的位置。</p>
-          <p class="en">The browser understands the page. The server places files where they belong.</p>
+          <h2 class="zh">扩展做转换，服务端只管保存。</h2>
+          <h2 class="en">The browser converts. The server saves.</h2>
+          <p class="zh">网页解析放在浏览器里完成，后端不用处理复杂页面，也不用跑一堆额外服务。它收到 Markdown 后，只负责创建文件夹、保存笔记和下载图片。</p>
+          <p class="en">The backend does not parse pages or run a heavy clipping engine. It receives the clip and writes it to the right place.</p>
         </div>
         <div class="workflow">
           <div class="step">
             <strong>01</strong>
-            <h3 class="zh">打开网页</h3>
+            <h3 class="zh">打开文章</h3>
             <h3 class="en">Open page</h3>
-            <p class="zh">在 Edge 或 Chrome 中打开需要保存的文章。</p>
+            <p class="zh">在 Edge 或 Chrome 打开要保存的网页。</p>
             <p class="en">Open the article in Edge or Chrome.</p>
           </div>
           <div class="step">
             <strong>02</strong>
-            <h3 class="zh">转换 Markdown</h3>
+            <h3 class="zh">扩展转换</h3>
             <h3 class="en">Convert Markdown</h3>
-            <p class="zh">扩展提取正文并在本地转换成 Markdown。</p>
+            <p class="zh">扩展在当前浏览器里提取正文，并生成 Markdown 预览。</p>
             <p class="en">The extension extracts content and converts it locally.</p>
           </div>
           <div class="step">
             <strong>03</strong>
-            <h3 class="zh">发送服务端</h3>
+            <h3 class="zh">发送结果</h3>
             <h3 class="en">Send to server</h3>
-            <p class="zh">只发送最终 Markdown、库名、路径和资源设置。</p>
+            <p class="zh">确认没问题后，把 Markdown、库名和路径发给你的后端。</p>
             <p class="en">Only final Markdown and destination settings are sent.</p>
           </div>
           <div class="step">
             <strong>04</strong>
-            <h3 class="zh">写入本地库</h3>
+            <h3 class="zh">写进库里</h3>
             <h3 class="en">Write vault</h3>
-            <p class="zh">服务端创建文件夹、保存笔记，并按需下载资源。</p>
+            <p class="zh">服务端创建缺失文件夹，保存笔记，并按需下载图片资源。</p>
             <p class="en">The server creates folders, saves notes, and downloads assets.</p>
           </div>
         </div>
@@ -745,10 +745,10 @@
 
       <section id="deploy" class="shell">
         <div class="section-head">
-          <h2 class="zh">Docker 部署，GitHub Pages 宣传。</h2>
-          <h2 class="en">Docker for the API, GitHub Pages for the site.</h2>
-          <p class="zh">服务端部署到你的主机，浏览器扩展连接 HTTPS 地址。这个页面本身可以直接放到 GitHub Pages。</p>
-          <p class="en">Deploy the API on your host, connect the extension to the HTTPS endpoint, and host this page with GitHub Pages.</p>
+          <h2 class="zh">服务端用 Docker 跑起来就能用。</h2>
+          <h2 class="en">One Docker container is enough.</h2>
+          <p class="zh">把服务端放在你的主机或 NAS 上，挂载笔记库目录，浏览器扩展填入 HTTPS 地址和令牌即可使用。</p>
+          <p class="en">Run the backend on your host or NAS, mount your vaults, then point the extension to its HTTPS URL and token.</p>
         </div>
         <div class="deploy">
           <pre><code>services:
@@ -774,10 +774,10 @@
     <footer class="footer-cta">
       <div class="shell footer-inner">
         <div>
-          <h2 class="zh">把网页资料变成自己的知识库。</h2>
-          <h2 class="en">Turn web pages into your own vault.</h2>
-          <p class="zh">自托管、可迁移、Markdown 优先。</p>
-          <p class="en">Self-hosted, portable, and Markdown-first.</p>
+          <h2 class="zh">最后得到的，就是你自己的 Markdown 文件。</h2>
+          <h2 class="en">Web clips that end up as your own files.</h2>
+          <p class="zh">Markdown 文件、图片资源、目录结构都在自己手上。</p>
+          <p class="en">Markdown files, assets, and folder structure stay under your control.</p>
         </div>
         <div class="actions">
           <a class="button primary" href="https://github.com/isredjiang/markvault-clipper" target="_blank" rel="noreferrer">
