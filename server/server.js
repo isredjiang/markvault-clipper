@@ -7,7 +7,7 @@ const crypto = require("crypto");
 const CONFIG_PATH = process.env.CLIPPER_CONFIG || path.join(__dirname, "config.json");
 const SERVICE_NAME = "MarkVault Clipper";
 const DEFAULT_CONFIG = {
-  host: "127.0.0.1",
+  host: "0.0.0.0",
   port: 3217,
   token: "change-me",
   vaultPath: path.resolve(process.cwd(), "vault"),
@@ -28,13 +28,78 @@ const DEFAULT_CONFIG = {
   siteRules: []
 };
 
-function loadConfig() {
-  if (!fs.existsSync(CONFIG_PATH)) return DEFAULT_CONFIG;
-  const user = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8").replace(/^\uFEFF/, ""));
-  return { ...DEFAULT_CONFIG, ...user, templates: { ...DEFAULT_CONFIG.templates, ...(user.templates || {}) } };
+function configHelp(extra = "") {
+  const sample = {
+    host: "0.0.0.0",
+    port: 3217,
+    token: "change-this-token",
+    vaultPath: "/vault",
+    vaultsRoot: "/vaults",
+    defaultVaultName: "",
+    defaultFolder: "_webClipper",
+    assetsFolder: "_webClipper/assets"
+  };
+  return [
+    "",
+    `[config] ${extra}`,
+    `[config] Expected a JSON file at: ${CONFIG_PATH}`,
+    "[config] Example:",
+    JSON.stringify(sample, null, 2),
+    ""
+  ].join("\n");
 }
 
-let config = loadConfig();
+function writeDefaultConfig() {
+  const generated = {
+    ...DEFAULT_CONFIG,
+    token: crypto.randomBytes(24).toString("hex"),
+    vaultPath: "/vault",
+    vaultsRoot: "/vaults"
+  };
+  fs.mkdirSync(path.dirname(CONFIG_PATH), { recursive: true });
+  fs.writeFileSync(CONFIG_PATH, `${JSON.stringify(generated, null, 2)}\n`, "utf8");
+  console.warn(configHelp(`Config file was missing, so a starter config was created. Change the token before exposing the service.`));
+  return generated;
+}
+
+function normalizeConfig(user) {
+  const normalized = { ...user };
+  if (normalized.vaultRoot && !normalized.vaultsRoot) {
+    normalized.vaultsRoot = normalized.vaultRoot;
+  }
+  return {
+    ...DEFAULT_CONFIG,
+    ...normalized,
+    templates: { ...DEFAULT_CONFIG.templates, ...(normalized.templates || {}) }
+  };
+}
+
+function loadConfig() {
+  if (!fs.existsSync(CONFIG_PATH)) return writeDefaultConfig();
+
+  const stat = fs.statSync(CONFIG_PATH);
+  if (stat.isDirectory()) {
+    throw new Error(configHelp("The config path is a directory, not a file. Delete that directory and create config.json as a real JSON file."));
+  }
+  if (!stat.isFile()) {
+    throw new Error(configHelp("The config path exists, but it is not a regular file."));
+  }
+
+  try {
+    const user = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8").replace(/^\uFEFF/, ""));
+    return normalizeConfig(user);
+  } catch (error) {
+    throw new Error(configHelp(`Failed to parse config JSON: ${error.message}`));
+  }
+}
+
+let config;
+try {
+  config = loadConfig();
+} catch (error) {
+  console.error(error.message);
+  process.exit(1);
+}
 
 function send(res, status, data, origin) {
   const body = JSON.stringify(data, null, 2);

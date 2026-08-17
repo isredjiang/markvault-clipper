@@ -5,6 +5,8 @@ services:
     environment:
       - CLIPPER_CONFIG=/app/server/config.json
     volumes:
+      # Create this as a real file before starting Compose.
+      # If the host file does not exist, Docker may create a directory here.
       - ./server/config.json:/app/server/config.json:ro
       - /path/to/obsidian-vaults:/vaults
     ports:

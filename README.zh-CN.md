@@ -52,6 +52,14 @@ Obsidian 风格的本地库。它不绑定 Ignis：只要目标应用能打开�
 }
 ```
 
+运行 Compose 前请先把 `config.json` 创建成真正的文件。如果宿主机路径不存在，
+Docker 可能会把 `config.json` 自动创建成目录，旧版本会因此报 `EISDIR`。
+
+```text
+mkdir -p server
+cp server/config.example.json server/config.json
+```
+
 使用已发布镜像：
 
 ```text

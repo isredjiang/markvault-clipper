@@ -56,6 +56,15 @@ Copy `server/config.example.json` to `server/config.json`, then change at least:
 }
 ```
 
+Create the config file before running Compose. If the host path does not exist,
+Docker may create `config.json` as a directory, which older versions reported as
+`EISDIR`.
+
+```text
+mkdir -p server
+cp server/config.example.json server/config.json
+```
+
 Use the published image:
 
 ```text
