@@ -59,6 +59,12 @@ Copy `server/config.example.json` to `server/config.json`, then change at least:
 Use the published image:
 
 ```text
+docker pull isredjiang/markvault-clipper:latest
+```
+
+The same image is also published to GHCR:
+
+```text
 docker pull ghcr.io/isredjiang/markvault-clipper:latest
 ```
 
@@ -73,7 +79,7 @@ Example Compose:
 ```yaml
 services:
   markvault-clipper:
-    image: ghcr.io/isredjiang/markvault-clipper:latest
+    image: isredjiang/markvault-clipper:latest
     container_name: markvault-clipper
     environment:
       - CLIPPER_CONFIG=/app/server/config.json
