@@ -35,3 +35,4 @@ server URL, token, vault name, clip folder, and assets folder in the popup.
 - [Acceptance Checklist](ACCEPTANCE.md)
 - [GitHub Pages landing page](docs/index.html)
 - License: MIT
+- Third-party notices: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)

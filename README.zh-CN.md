@@ -121,3 +121,16 @@ npm run build:extension
 
 本地调试时在 Edge/Chrome 扩展管理页加载 `extension/` 文件夹。正式发布时压缩
 `extension/` 目录内容即可。
+
+## 协议与第三方依赖
+
+MarkVault Clipper 本身使用 MIT 协议。浏览器扩展中会打包这些开源依赖：
+
+| 依赖 | 协议 | 用途 |
+| --- | --- | --- |
+| `@mixmark-io/domino` | BSD-2-Clause | Turndown 在 Node 环境使用的 DOM 依赖 |
+| `@mozilla/readability` | Apache-2.0 | 提取网页正文 |
+| `turndown` | MIT | HTML 转 Markdown |
+| `turndown-plugin-gfm` | MIT | GFM 表格、删除线、任务列表等支持 |
+
+完整第三方声明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

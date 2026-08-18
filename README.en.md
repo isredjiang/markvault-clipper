@@ -130,3 +130,18 @@ npm run build:extension
 
 For local testing, load `extension/` as an unpacked Edge/Chrome extension. For
 release, zip the contents of `extension/`.
+
+## License and Third-Party Dependencies
+
+MarkVault Clipper is licensed under the MIT License. The browser extension
+bundles these open-source dependencies:
+
+| Dependency | License | Purpose |
+| --- | --- | --- |
+| `@mixmark-io/domino` | BSD-2-Clause | DOM dependency used by Turndown in Node environments |
+| `@mozilla/readability` | Apache-2.0 | Article extraction |
+| `turndown` | MIT | HTML to Markdown conversion |
+| `turndown-plugin-gfm` | MIT | GFM tables, strikethrough, task lists, and related Markdown support |
+
+See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for full third-party
+notices.
